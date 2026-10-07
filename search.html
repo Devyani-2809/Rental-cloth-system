@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Search Results | RentStyle</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="collections.html">Collections</a>
+                <div class="quick-search-wrap">
+                    <input type="text" id="quickSearchInput" class="quick-search-input" placeholder="🔍 Quick search..."
+                        oninput="quickSearch(this.value)" onfocus="showQuickResults()"
+                        onblur="setTimeout(hideQuickResults,200)" autocomplete="off" />
+                    <div id="quickSearchResults" class="quick-search-results hidden"></div>
+                </div>
+                <a href="features.html">Features</a>
+                <a href="orders.html">My Orders</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <div class="actions">
+                <div class="theme-switcher" title="Switch Theme">
+                    <button class="theme-btn t1" onclick="setTheme('')" title="Midnight Luxe"></button>
+                    <button class="theme-btn t2" onclick="setTheme('theme-royal')" title="Royal Gold"></button>
+                    <button class="theme-btn t3" onclick="setTheme('theme-blush')" title="Soft Blush"></button>
+                </div>
+                <button id="openLogin" class="btn btn-secondary">Login</button>
+                <button id="openRegister" class="btn btn-primary">Register</button>
+            </div>
+        </header>
+
+        <section class="page-section">
+            <div class="page-heading">
+                <span class="eyebrow">Search</span>
+                <h1>Search results for <span id="searchQueryDisplay"></span></h1>
+                <p>Showing items that match your query. Use filters to refine results.</p>
+            </div>
+
+            <div id="cardsGrid" class="cards-grid"></div>
+        </section>
+
+        <footer class="site-footer">
+            <p>&copy; © 2026 RentStyle | Developed by Devyani Pawar, Latika Patil, Mansi Kate, Hemlata Patil, and
+                Charuta Bhadane.</p>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+
+    <script src="supabase.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

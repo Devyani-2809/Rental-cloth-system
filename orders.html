@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Orders | RentStyle</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .orders-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .order-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+
+        .order-card-header {
+            background: var(--surface);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .order-card-header h3 {
+            margin: 0;
+            font-size: 1em;
+            color: var(--text);
+        }
+
+        .order-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-confirmed { background: #d1e7dd; color: #0f5132; }
+        .status-cancelled { background: #f8d7da; color: #842029; }
+
+        .order-items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-items-table th,
+        .order-items-table td {
+            padding: 12px 16px;
+            text-align: left;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .order-items-table th {
+            background: var(--surface);
+            font-weight: 600;
+            color: var(--muted);
+            font-size: 0.9em;
+        }
+
+        .bill-section {
+            padding: 16px 20px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+        }
+
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            color: var(--text);
+            font-size: 0.95em;
+        }
+
+        .bill-row.total {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--text);
+            border-top: 1px solid var(--border);
+            margin-top: 8px;
+            padding-top: 10px;
+        }
+
+        .bill-row.gst { color: var(--muted); }
+
+        .order-actions {
+            padding: 16px 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            border-top: 1px solid var(--border);
+        }
+
+        .payment-badge {
+            background: rgba(3,105,161,0.15);
+            color: #38bdf8;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            font-weight: 600;
+        }
+
+        .empty-orders {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+        }
+
+        .empty-orders h2 {
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .search-container { margin-bottom: 24px; }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1em;
+            color: var(--text);
+            background: var(--surface2);
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .search-input:focus { border-color: var(--accent); }
+        .search-input::placeholder { color: var(--muted); }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="collections.html">Collections</a>
+                <a href="orders.html" style="font-weight:700;">My Orders</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <div class="actions"></div>
+        </header>
+
+        <div class="orders-container">
+            <h1 style="color:var(--text); margin-bottom:8px;">My Orders</h1>
+            <p style="color:var(--muted); margin-bottom:28px;">Track your rentals and manage your orders below.</p>
+            <div class="search-container">
+                <input type="text" id="orderSearchInput" class="search-input"
+                    placeholder="Search orders by product name, color, occasion..."
+                    oninput="filterUserOrders()" />
+            </div>
+            <div id="ordersContainer">
+                <div class="empty-orders">
+                    <p>Loading orders...</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <p>&copy; © 2026 RentStyle | Developed by Devyani Pawar, Latika Patil, Mansi Kate, Hemlata Patil, and
+                Charuta Bhadane.</p>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+
+    <script src="supabase.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

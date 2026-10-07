@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel | RentStyle</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f0f2f5;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* LAYOUT */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .admin-sidebar {
+            width: 240px;
+            background: #111;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            transition: width 0.2s;
+        }
+
+        .sidebar-brand {
+            padding: 24px 20px 20px;
+            font-size: 1.3em;
+            font-weight: 800;
+            border-bottom: 1px solid #222;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-brand span {
+            color: #f59e0b;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 20px;
+            cursor: pointer;
+            color: #aaa;
+            font-size: 0.95em;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .nav-item:hover {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: #1a1a1a;
+            color: #f59e0b;
+            border-left-color: #f59e0b;
+        }
+
+        .nav-item .nav-icon {
+            font-size: 1.2em;
+            width: 22px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #222;
+        }
+
+        .admin-email {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 9px;
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .btn-logout:hover {
+            background: #b02a37;
+        }
+
+        /* MAIN CONTENT */
+        .admin-main {
+            margin-left: 240px;
+            flex: 1;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        /* TOP BAR */
+        .admin-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .admin-topbar h1 {
+            font-size: 1.6em;
+            color: #111;
+            font-weight: 700;
+        }
+
+        .admin-topbar p {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 2px;
+        }
+
+        /* SECTIONS */
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        /* STAT CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid #e5e7eb;
+            transition: transform 0.15s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.8em;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2em;
+            font-weight: 800;
+            color: #111;
+            margin: 6px 0 0;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 1.6em;
+            margin-bottom: 8px;
+        }
+
+        .stat-card.blue {
+            border-left-color: #3b82f6;
+        }
+
+        .stat-card.green {
+            border-left-color: #22c55e;
+        }
+
+        .stat-card.yellow {
+            border-left-color: #f59e0b;
+        }
+
+        .stat-card.red {
+            border-left-color: #ef4444;
+        }
+
+        .stat-card.purple {
+            border-left-color: #8b5cf6;
+        }
+
+        .stat-card.teal {
+            border-left-color: #14b8a6;
+        }
+
+        .stat-card.orange {
+            border-left-color: #f97316;
+        }
+
+        .stat-card.pink {
+            border-left-color: #ec4899;
+        }
+
+        /* TABLE CARD */
+        .table-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .table-card-header {
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .table-card-header h3 {
+            font-size: 1.1em;
+            color: #111;
+            font-weight: 700;
+        }
+
+        .table-card table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-card th {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.82em;
+            font-weight: 700;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table-card td {
+            padding: 12px 16px;
+            color: #222;
+            font-size: 0.9em;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .table-card tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-card tr:hover td {
+            background: #fafafa;
+        }
+
+        .overflow-x {
+            overflow-x: auto;
+        }
+
+        /* FORM CARD */
+        .form-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+
+        .form-card h3 {
+            font-size: 1.1em;
+            color: #111;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-grid-1 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95em;
+            color: #111;
+            transition: border-color 0.15s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #f59e0b;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        /* BADGE */
+        .badge-status {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.78em;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-confirmed {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .badge-shipped {
+            background: #cfe2ff;
+            color: #0a58ca;
+        }
+
+        .badge-delivered {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .badge-returned {
+            background: #e9d5ff;
+            color: #6d28d9;
+        }
+
+        .badge-cancelled {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        /* ACTION BUTTONS */
+        .act-btn {
+            border: none;
+            padding: 5px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin: 2px;
+            transition: opacity 0.15s;
+        }
+
+        .act-btn:hover {
+            opacity: 0.85;
+        }
+
+        .act-green {
+            background: #22c55e;
+            color: #fff;
+        }
+
+        .act-blue {
+            background: #3b82f6;
+            color: #fff;
+        }
+
+        .act-red {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .act-yellow {
+            background: #f59e0b;
+            color: #fff;
+        }
+
+        .act-purple {
+            background: #8b5cf6;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 60px;
+            }
+
+            .nav-item span,
+            .sidebar-brand span.brand-text,
+            .admin-email,
+            .sidebar-brand .brand-full {
+                display: none;
+            }
+
+            .admin-main {
+                margin-left: 60px;
+                padding: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .form-grid-2,
+            .form-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-brand">&#128084; Rent<span>Style</span></div>
+            <nav class="sidebar-nav">
+                <div class="nav-item active" onclick="showAdminSection('dashboard')">
+                    <span class="nav-icon">&#9783;</span><span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="showAdminSection('orders')">
+                    <span class="nav-icon">&#128230;</span><span>Customer Orders</span>
+                </div>
+                <div class="nav-item" onclick="showAdminSection('users')">
+                    <span class="nav-icon">&#128101;</span><span>Manage Users</span>
+                </div>
+                <div class="nav-item" onclick="showAdminSection('products')">
+                    <span class="nav-icon">&#128084;</span><span>Manage Products</span>
+                </div>
+                <div class="nav-item" onclick="showAdminSection('addproduct')">
+                    <span class="nav-icon">&#43;</span><span>Add Product</span>
+                </div>
+                <div class="nav-item" onclick="showAdminSection('refunds')">
+                    <span class="nav-icon">&#128181;</span><span>Cancel Refunds</span>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="admin-email" id="adminEmailDisplay"></div>
+                <button class="btn-logout" onclick="logoutUser()">&#128275; Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="admin-main">
+
+            <!-- DASHBOARD -->
+            <div id="section-dashboard" class="admin-section active">
+                <div class="admin-topbar">
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p>Welcome back, Admin! Here's your overview.</p>
+                    </div>
+                    <button class="act-btn act-blue" onclick="loadAdminDashboard()">&#8635; Refresh</button>
+                </div>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card blue">
+                        <div class="stat-icon">&#128101;</div>
+                        <div class="stat-label">Total Customers</div>
+                        <div class="stat-value" id="stat-customers">—</div>
+                    </div>
+                    <div class="stat-card teal">
+                        <div class="stat-icon">&#128084;</div>
+                        <div class="stat-label">Total Products</div>
+                        <div class="stat-value" id="stat-products">—</div>
+                    </div>
+                    <div class="stat-card yellow">
+                        <div class="stat-icon">&#128230;</div>
+                        <div class="stat-label">Total Orders</div>
+                        <div class="stat-value" id="stat-orders">—</div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-icon">&#9203;</div>
+                        <div class="stat-label">Pending Orders</div>
+                        <div class="stat-value" id="stat-pending">—</div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-icon">&#128666;</div>
+                        <div class="stat-label">Shipped</div>
+                        <div class="stat-value" id="stat-shipped">—</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">&#9989;</div>
+                        <div class="stat-label">Delivered</div>
+                        <div class="stat-value" id="stat-delivered">—</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon">&#128257;</div>
+                        <div class="stat-label">Returned</div>
+                        <div class="stat-value" id="stat-returned">—</div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-icon">&#10060;</div>
+                        <div class="stat-label">Cancelled</div>
+                        <div class="stat-value" id="stat-cancelled">—</div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Preview -->
+                <div class="table-card">
+                    <div class="table-card-header">
+                        <h3>&#128203; Recent Orders</h3>
+                        <button class="act-btn act-blue" onclick="showAdminSection('orders')">View All</button>
+                    </div>
+                    <div class="overflow-x">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersBody">
+                                <tr>
+                                    <td colspan="5" style="text-align:center;padding:20px;color:#888;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CUSTOMER ORDERS -->
+            <div id="section-orders" class="admin-section">
+                <div class="admin-topbar">
+                    <div>
+                        <h1>Customer Orders</h1>
+                        <p>Manage and update all customer orders.</p>
+                    </div>
+                    <div style="flex: 1; margin: 0 20px; max-width: 400px;">
+                        <input type="text" id="adminOrderSearchInput" placeholder="Search orders..."
+                            style="width: 100%; padding: 8px 15px; border-radius: 20px; border: 1px solid #ddd; color:#000;"
+                            oninput="filterAdminOrders()" />
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button class="act-btn act-blue" onclick="loadAdminOrders()">&#8635; Refresh</button>
+                        <button class="act-btn act-green" onclick="adminPrintAllReport()">&#128438; Download All
+                            Report</button>
+                        <button class="act-btn act-purple" onclick="adminPrintByCustomer()">&#128101; Customer
+                            Report</button>
+                        <button class="act-btn act-red" onclick="adminDeleteSelectedOrders()"
+                            style="background:#dc3545;">&#128465; Delete Selected</button>
+                        <button class="act-btn act-red" onclick="adminDeleteAllOrders()"
+                            style="background:#7f1d1d;">&#128465; Delete All</button>
+                    </div>
+                </div>
+                <div class="table-card">
+                    <div class="overflow-x">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAllOrders"
+                                            style="width:16px;height:16px;cursor:pointer;"
+                                            onchange="document.querySelectorAll('.order-row-check').forEach(c=>c.checked=this.checked)" />
+                                    </th>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Rental Days</th>
+                                    <th>Amount Paid</th>
+                                    <th>Bill Amount</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminOrdersTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align:center;padding:20px;color:#888;">Loading orders...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MANAGE USERS -->
+            <div id="section-users" class="admin-section">
+                <div class="admin-topbar">
+                    <div>
+                        <h1>Manage Users</h1>
+                        <p>View all registered customers.</p>
+                    </div>
+                    <div style="flex: 1; margin: 0 20px; max-width: 400px;">
+                        <input type="text" id="adminUserSearchInput" placeholder="Search user by name or email..."
+                            style="width: 100%; padding: 8px 15px; border-radius: 20px; border: 1px solid #ddd; color:#000;"
+                            oninput="filterAdminUsers()" />
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button class="act-btn act-blue" onclick="loadUsersFromSupabase()">&#8635; Refresh</button>
+                    </div>
+                </div>
+                <div class="table-card">
+                    <div class="overflow-x">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Role</th>
+                                    <th>Registered On</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align:center;padding:20px;color:#888;">Loading users...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MANAGE PRODUCTS -->
+            <div id="section-products" class="admin-section">
+                <div class="admin-topbar">
+                    <div>
+                        <h1>Manage Products</h1>
+                        <p>Edit or remove existing products.</p>
+                    </div>
+                    <div style="flex: 1; margin: 0 20px; max-width: 400px;">
+                        <input type="text" id="adminProductSearchInput" placeholder="Search products..."
+                            style="width: 100%; padding: 8px 15px; border-radius: 20px; border: 1px solid #ddd; color:#000;"
+                            oninput="filterAdminProducts()" />
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button class="act-btn act-blue" onclick="loadAdminProductsFromSupabase()">&#8635;
+                            Refresh</button>
+                        <button class="act-btn act-green" onclick="showAdminSection('addproduct')">&#43; Add
+                            Product</button>
+                        <button class="act-btn act-purple" onclick="adminPrintAllProductsReport()">&#128438; Download
+                            Products Report</button>
+                    </div>
+                </div>
+                <div class="table-card">
+                    <div class="overflow-x">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Deposit</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminProductsTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align:center;padding:20px;color:#888;">Loading
+                                        products...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADD PRODUCT -->
+            <div id="section-addproduct" class="admin-section">
+                <div class="admin-topbar">
+                    <div>
+                        <h1 id="formSectionTitle">Add New Product</h1>
+                        <p>Fill in the details to add a new rental product.</p>
+                    </div>
+                </div>
+                <div class="form-card">
+                    <form id="addProductForm">
+                        <div class="form-grid-2">
+                            <div class="form-group"><label>Title *</label><input id="addTitle" type="text"
+                                    placeholder="Product Title" required /></div>
+                            <div class="form-group"><label>Category *</label>
+                                <select id="addCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="dresses">Dresses</option>
+                                    <option value="suits">Suits</option>
+                                    <option value="casual">Casual</option>
+                                    <option value="traditional">Traditional</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-grid-3">
+                            <div class="form-group"><label>Gender *</label>
+                                <select id="addGender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Unisex">Unisex</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Age *</label>
+                                <select id="addAge" required>
+                                    <option value="">Select Age</option>
+                                    <option value="Kids">Kids</option>
+                                    <option value="Adults">Adults</option>
+                                    <option value="Teens">Teens</option>
+                                    <option value="All Ages">All Ages</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Size *</label>
+                                <select id="addSize" required>
+                                    <option value="">Select Size</option>
+                                    <option value="XS">XS</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-grid-3">
+                            <div class="form-group"><label>Occasion *</label>
+                                <select id="addOccasion" required>
+                                    <option value="">Select Occasion</option>
+                                    <option value="Wedding">Wedding</option>
+                                    <option value="Party">Party</option>
+                                    <option value="Formal">Formal</option>
+                                    <option value="Casual">Casual</option>
+                                    <option value="Festival">Festival</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Festival</label>
+                                <select id="addFestival">
+                                    <option value="None">None</option>
+                                    <option value="Diwali">Diwali</option>
+                                    <option value="Holi">Holi</option>
+                                    <option value="Eid">Eid</option>
+                                    <option value="Navratri">Navratri</option>
+                                    <option value="Raksha Bandhan">Raksha Bandhan</option>
+                                    <option value="Wedding">Wedding</option>
+                                    <option value="Christmas">Christmas</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Color *</label><input id="addColor" type="text"
+                                    placeholder="e.g., Red, Black" required /></div>
+                        </div>
+                        <div class="form-grid-3">
+                            <div class="form-group"><label>Price / Day (₹) *</label><input id="addPrice" type="number"
+                                    step="0.01" min="0.01" placeholder="1500.00" required /></div>
+                            <div class="form-group"><label>Deposit (₹)</label><input id="addDeposit" type="number"
+                                    step="0.01" min="0" value="0" placeholder="500.00" /></div>
+                            <div class="form-group"><label>Stock *</label><input id="addStock" type="number" min="1"
+                                    value="1" placeholder="5" required /></div>
+                        </div>
+                        <div class="form-grid-1">
+                            <div class="form-group"><label>Image URL</label><input id="addImageUrl" type="url"
+                                    placeholder="https://example.com/image.jpg" /></div>
+                        </div>
+                        <div class="form-grid-1">
+                            <div class="form-group"><label>Description</label><textarea id="addDescription" rows="3"
+                                    placeholder="Detailed description..."></textarea></div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+                            <input id="addAvailable" type="checkbox" checked style="width:18px;height:18px;" />
+                            <label for="addAvailable" style="font-weight:600;color:#333;">Available for Rent</label>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="act-btn act-green" style="padding:12px 28px;font-size:1em;">Add
+                                Product</button>
+                            <button type="button" id="cancelEditBtn" class="act-btn act-red hidden"
+                                onclick="resetProductForm()" style="padding:12px 20px;font-size:1em;">Cancel
+                                Edit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- CANCEL REFUNDS -->
+            <div id="section-refunds" class="admin-section">
+                <div class="admin-topbar">
+                    <div>
+                        <h1>Cancel Refunds</h1>
+                        <p>Manage refund requests from cancelled orders.</p>
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button class="act-btn act-blue" onclick="loadAdminRefunds()">&#8635; Refresh</button>
+                        <button class="act-btn act-green" onclick="adminPrintSelectedRefunds()">&#128438; Print Selected
+                            Order Report</button>
+                        <button class="act-btn act-purple" onclick="adminPrintAllUsersReport()">&#128101; Print All User
+                            Report</button>
+                    </div>
+                </div>
+                <div class="table-card">
+                    <div class="overflow-x">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAllRefunds"
+                                            style="width:16px;height:16px;cursor:pointer;"
+                                            onchange="document.querySelectorAll('.refund-row-check').forEach(c=>c.checked=this.checked)" />
+                                    </th>
+                                    <th>Refund ID</th>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Deposit Paid</th>
+                                    <th>Refund Amount</th>
+                                    <th>Payment Method</th>
+                                    <th>Notes</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminRefundsTableBody">
+                                <tr>
+                                    <td colspan="11" style="text-align:center;padding:20px;color:#888;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

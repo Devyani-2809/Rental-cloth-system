@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm Order | RentStyle</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .confirm-container { max-width: 700px; margin: 40px auto; padding: 20px; }
+        .bill-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 24px; }
+        .bill-card-header { background: #111; color: #fff; padding: 20px 24px; }
+        .bill-card-header h2 { margin: 0; font-size: 1.3em; }
+        .bill-card-header p { margin: 4px 0 0; font-size: 0.9em; opacity: 0.7; }
+        .bill-items { padding: 0; }
+        .bill-item-row { display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-bottom: 1px solid #f0f0f0; }
+        .bill-item-row img { width: 55px; height: 72px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .bill-item-info { flex: 1; }
+        .bill-item-info h4 { margin: 0 0 4px; color: #000; font-size: 0.95em; }
+        .bill-item-info p { margin: 0; color: #666; font-size: 0.85em; }
+        .bill-item-price { font-weight: 700; color: #000; white-space: nowrap; }
+        .bill-summary { padding: 20px 24px; background: #fafafa; border-top: 2px solid #eee; }
+        .bill-summary-row { display: flex; justify-content: space-between; padding: 6px 0; color: #333; font-size: 0.95em; }
+        .bill-summary-row.deposit { color: #0369a1; font-weight: 600; }
+        .bill-summary-row.gst { color: #666; }
+        .bill-summary-row.grand { font-weight: 800; font-size: 1.2em; color: #000; border-top: 2px solid #ddd; margin-top: 10px; padding-top: 12px; }
+        .pay-btn { width: 100%; padding: 16px; font-size: 1.1em; border-radius: 12px; margin-top: 8px; }
+        .payment-method-box { border: 2px solid #e5e7eb; border-radius: 14px; padding: 20px; cursor: pointer; transition: border-color 0.2s, background 0.2s; text-align: center; }
+        .payment-method-box:hover { border-color: #111; background: #f9f9f9; }
+        .payment-method-box h3 { margin: 10px 0 6px; color: #000; font-size: 1em; }
+        .payment-method-box p { margin: 0; color: #666; font-size: 0.85em; }
+        .upi-box { background: #f0fdf4; border: 2px solid #22c55e; border-radius: 14px; padding: 24px; text-align: center; }
+        .upi-box .upi-number { font-size: 1.8em; font-weight: 800; color: #111; letter-spacing: 2px; margin: 12px 0 4px; }
+        .upi-box .upi-name { font-size: 1em; color: #16a34a; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="collections.html">Collections</a>
+                <a href="orders.html">My Orders</a>
+            </nav>
+            <div class="actions"></div>
+        </header>
+
+        <div class="confirm-container">
+            <h1 style="color:#000; margin-bottom:6px;">Order Summary</h1>
+            <p style="color:#666; margin-bottom:24px;">Review your items and pay the deposit to confirm your rental.</p>
+            <div id="confirmBillContainer"><p style="color:#666;">Loading...</p></div>
+        </div>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 RentStyle. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+
+    <script src="supabase.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

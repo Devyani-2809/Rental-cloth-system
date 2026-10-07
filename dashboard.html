@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | Cloth Rental</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="collections.html">Collections</a>
+                <a href="features.html">Features</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <div class="actions">
+                <button id="openLogin" class="btn btn-secondary">Login</button>
+                <button id="openRegister" class="btn btn-primary">Register</button>
+            </div>
+        </header>
+
+        <section class="page-section">
+            <div class="page-heading">
+                <span class="eyebrow">Admin & User Charts</span>
+                <h1>Powerful dashboard tools for rentals and returns</h1>
+                <p>Monitor orders, manage inventory, approve returns, and track revenue with clear analytics and control
+                    panels.</p>
+            </div>
+
+            <section class="dashboard-section">
+                <div class="dashboard-panel user-panel">
+                    <h3>User Dashboard</h3>
+                    <ul>
+                        <li>Profile details and rental history cards</li>
+                        <li>Track active orders and return status</li>
+                        <li>Wishlist, cart, and date selection summaries</li>
+                        <li>Review logs and rating feedback</li>
+                    </ul>
+                </div>
+                <div class="dashboard-panel admin-panel">
+                    <h3>Admin Dashboard</h3>
+                    <ul>
+                        <li>Manage inventory and garment categories</li>
+                        <li>Approve / cancel orders and return requests</li>
+                        <li>View registered users and rental analytics</li>
+                        <li>Revenue metrics by festival and colour filters</li>
+                    </ul>
+                </div>
+            </section>
+
+            <div style="margin-top: 36px; display:flex; gap:16px; flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="window.location.href='collections.html'">Go to
+                    Collections</button>
+                <button class="btn btn-secondary" onclick="window.location.href='features.html'">Explore
+                    Features</button>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <p>&copy; © 2026 RentStyle | Developed by Devyani Pawar, Latika Patil, Mansi Kate, Hemlata Patil, and
+                Charuta Bhadane.</p>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+    <script src="supabase.min.js"></script>
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>

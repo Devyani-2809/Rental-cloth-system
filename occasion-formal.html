@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formal Collection | Cloth Rental</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="collections.html">Collections</a>
+                <a href="features.html">Features</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <div class="actions">
+                <button id="openLogin" class="btn btn-secondary">Login</button>
+                <button id="openRegister" class="btn btn-primary">Register</button>
+            </div>
+        </header>
+
+        <section class="page-section">
+            <div class="page-heading">
+                <span class="eyebrow">Formal Looks</span>
+                <h1>Formal occasion rental collection</h1>
+                <p>Discover elegant formal outfits for business events, evening dinners, and cultural ceremonies.</p>
+            </div>
+            <div class="filters-panel">
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select id="categoryFilter">
+                        <option value="all">All</option>
+                        <option value="dresses">Dresses</option>
+                        <option value="suits">Suits</option>
+                        <option value="casual">Casual</option>
+                        <option value="traditional">Traditional</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Gender</label>
+                    <select id="genderFilter">
+                        <option value="all">All</option>
+                        <option value="women">Women</option>
+                        <option value="men">Men</option>
+                        <option value="unisex">Unisex</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Age</label>
+                    <select id="ageFilter">
+                        <option value="all">All</option>
+                        <option value="Kids">Kids</option>
+                        <option value="Adults">Adults</option>
+                        <option value="Teens">Teens</option>
+                        <option value="All Ages">All Ages</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Occasion</label>
+                    <select id="occasionFilter">
+                        <option value="all">All</option>
+                        <option value="wedding">Wedding</option>
+                        <option value="party">Party</option>
+                        <option value="formal">Formal</option>
+                        <option value="casual">Casual</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Festival</label>
+                    <select id="festivalFilter">
+                        <option value="all">All</option>
+                        <option value="diwali">Diwali</option>
+                        <option value="holi">Holi</option>
+                        <option value="eid">Eid</option>
+                        <option value="navratri">Navratri</option>
+                        <option value="raksha-bandhan">Raksha Bandhan</option>
+                        <option value="christmas">Christmas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Color</label>
+                    <select id="colorFilter">
+                        <option value="all">All</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="black">Black</option>
+                        <option value="white">White</option>
+                        <option value="gold">Gold</option>
+                        <option value="green">Green</option>
+                        <option value="pink">Pink</option>
+                        <option value="purple">Purple</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Price</label>
+                    <select id="priceFilter">
+                        <option value="all">All</option>
+                        <option value="0-50">$0 - $50</option>
+                        <option value="50-100">$50 - $100</option>
+                        <option value="100+">$100+</option>
+                    </select>
+                </div>
+            </div>
+            <div id="cardsGrid" class="cards-grid"></div>
+        </section>
+        <footer class="site-footer">
+            <p>&copy; 2026 RentStyle. Formal rentals for smart event dressing.</p>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+    <script src="supabase.min.js"></script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

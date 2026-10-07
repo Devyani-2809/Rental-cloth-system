@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | Cloth Rental</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="collections.html">Collections</a>
+                <a href="features.html">Features</a>
+                <a href="dashboard.html">Dashboard</a>
+            </nav>
+            <div class="actions">
+                <button id="openLogin" class="btn btn-secondary">Login</button>
+                <button id="openRegister" class="btn btn-primary">Register</button>
+            </div>
+        </header>
+
+        <section class="page-section">
+            <div class="page-heading">
+                <span class="eyebrow">Contact Support</span>
+                <h1>Need help with your rental order?</h1>
+                <p>Send us a request for booking support, inventory inquiries, or admin assistance. Our support team
+                    responds fast.</p>
+            </div>
+
+            <div style="margin-top: 40px; display:grid; gap:18px;">
+                <div class="dashboard-panel">
+                    <h3>Customer Care</h3>
+                    <p style="color: var(--muted);">pawardevyani560@gmail.com</p>
+                </div>
+                <div class="dashboard-panel">
+                    <h3>Call Support</h3>
+                    <p style="color: var(--muted);">+918459643821</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <p>&copy; © 2026 RentStyle | Developed by Devyani Pawar, Latika Patil, Mansi Kate, Hemlata Patil, and
+                Charuta Bhadane.</p>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+    <script src="supabase.min.js"></script>
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>

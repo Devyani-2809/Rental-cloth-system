@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Now | RentStyle</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .booking-frame {
+            max-width: 500px;
+            margin: 60px auto;
+            background: var(--surface2, #fff);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border, #eee);
+        }
+
+        .booking-frame h2 {
+            text-align: center;
+            margin-bottom: 8px;
+            color: var(--text, #111);
+            font-size: 1.8em;
+        }
+
+        .booking-frame p.subtitle {
+            text-align: center;
+            color: var(--muted, #666);
+            margin-bottom: 28px;
+            font-size: 0.95em;
+        }
+
+        .date-group {
+            margin-bottom: 20px;
+        }
+
+        .date-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text, #333);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .date-group input[type="date"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border, #e5e7eb);
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            background: var(--surface, #fafafa);
+            color: var(--text, #111);
+            transition: border-color 0.2s;
+        }
+
+        .date-group input[type="date"]:focus {
+            outline: none;
+            border-color: var(--accent, #6366f1);
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1em;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        .booking-product-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--surface, #f8f9fa);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border, #eee);
+        }
+
+        .booking-product-info img {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .booking-product-info div h4 {
+            margin: 0 0 4px 0;
+            color: var(--text, #111);
+            font-size: 1em;
+        }
+
+        .booking-product-info div span {
+            color: var(--accent, #6366f1);
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="collections.html">Collections</a>
+                <a href="orders.html">My Orders</a>
+            </nav>
+        </header>
+
+        <div class="booking-frame">
+            <h2>&#128197; Book Your Outfit</h2>
+            <p class="subtitle">Select your rental dates to continue.</p>
+
+            <div id="productPreview" class="booking-product-info hidden">
+                <img id="previewImg" src="" alt="Product" />
+                <div>
+                    <h4 id="previewTitle">Loading product...</h4>
+                    <span id="previewPrice"></span>
+                </div>
+            </div>
+
+            <form id="bookNowForm">
+                <div class="date-group">
+                    <label>Delivery / Start Date</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="date-group">
+                    <label>Return Date</label>
+                    <input type="date" id="returnDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary book-btn">Confirm Dates & Checkout</button>
+            </form>
+        </div>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 RentStyle. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkSession();
+
+            const productId = localStorage.getItem('selectedProductId');
+            if (!productId) {
+                showToast('No product selected. Redirecting...');
+                setTimeout(() => window.location.href = 'collections.html', 1500);
+                return;
+            }
+
+            const { data: cloth } = await supabaseClient
+                .from('clothes')
+                .select('*')
+                .eq('id', productId)
+                .single();
+
+            if (cloth) {
+                document.getElementById('productPreview').classList.remove('hidden');
+                document.getElementById('previewImg').src = cloth.image_url;
+                document.getElementById('previewTitle').innerText = cloth.title;
+                document.getElementById('previewPrice').innerText = '₹' + cloth.price + ' / day';
+            }
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').setAttribute('min', today);
+            document.getElementById('returnDate').setAttribute('min', today);
+        });
+
+        document.getElementById('bookNowForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            if (!currentUser) {
+                showToast('Please login to book products');
+                setTimeout(() => openLoginModal(), 1000);
+                return;
+            }
+
+            const productId = localStorage.getItem('selectedProductId');
+            const startDateVal = document.getElementById('startDate').value;
+            const returnDateVal = document.getElementById('returnDate').value;
+
+            const start = new Date(startDateVal);
+            const end = new Date(returnDateVal);
+            const diff = end - start;
+
+            if (diff <= 0) {
+                showToast('Return date must be after the start date.');
+                return;
+            }
+
+            const rentalDays = Math.ceil(diff / 86400000);
+
+            const { data: cloth, error } = await supabaseClient
+                .from('clothes')
+                .select('*')
+                .eq('id', productId)
+                .single();
+
+            if (error || !cloth) {
+                showToast('Failed to load product details');
+                return;
+            }
+
+            const mockCartItem = {
+                id: 'book_' + productId,
+                quantity: 1,
+                rental_days: rentalDays,
+                start_date: startDateVal,
+                end_date: returnDateVal,
+                clothes: { id: cloth.id, title: cloth.title, price: cloth.price, image_url: cloth.image_url }
+            };
+
+            localStorage.setItem('pendingOrderItems', JSON.stringify([mockCartItem]));
+            localStorage.setItem('pendingCartIds', JSON.stringify([]));
+
+            showToast('Dates confirmed! Redirecting to payment...');
+            setTimeout(() => window.location.href = 'confirm_order.html', 1000);
+        });
+    </script>
+</body>
+
+</html>

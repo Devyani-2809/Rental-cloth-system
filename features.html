@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Features | Cloth Rental</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="collections.html">Collections</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <div class="actions">
+                <button id="openLogin" class="btn btn-secondary">Login</button>
+                <button id="openRegister" class="btn btn-primary">Register</button>
+            </div>
+        </header>
+
+        <section class="page-section">
+            <div class="page-heading">
+                <span class="eyebrow">Powerful Rental Tools</span>
+                <h1>Everything your cloth rental store needs</h1>
+                <p>Secure authentication, advanced filtering, order tracking, admin controls and responsive UI all in
+                    one beautiful interface.</p>
+            </div>
+
+            <section class="features-grid">
+                <article>
+                    <h2>User Experience</h2>
+                    <ul>
+                        <li>Secure Supabase login and registration</li>
+                        <li>Profile management and rental history</li>
+                        <li>Wishlist, cart, and rental duration selection</li>
+                        <li>Review and rating system for every outfit</li>
+                    </ul>
+                </article>
+                <article>
+                    <h2>Smart Shopping</h2>
+                    <ul>
+                        <li>Filter by festival, colour, occasion and price</li>
+                        <li>Search, sort and discover curated collections</li>
+                        <li>Availability status and item details in one click</li>
+                        <li>Dynamic UI with image-rich backgrounds and cards</li>
+                    </ul>
+                </article>
+                <article>
+                    <h2>Admin Panel</h2>
+                    <ul>
+                        <li>Add, update and delete clothes inventory</li>
+                        <li>Approve or cancel orders and returns</li>
+                        <li>View users, monitor revenue and generate reports</li>
+                        <li>Dashboard analytics for every rental category</li>
+                    </ul>
+                </article>
+            </section>
+
+            <div style="margin-top: 36px; display:flex; gap:16px; flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="window.location.href='collections.html'">Browse
+                    Collection</button>
+                <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">View
+                    Dashboard</button>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <p>&copy; © 2026 RentStyle | Developed by Devyani Pawar, Latika Patil, Mansi Kate, Hemlata Patil, and
+                Charuta Bhadane.</p>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+    <script src="supabase.min.js"></script>
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>

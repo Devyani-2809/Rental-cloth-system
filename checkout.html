@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Pay Deposit</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .checkout-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: #000;
+        }
+
+        .payment-options {
+            margin-top: 30px;
+            display: none;
+            text-align: left;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .option-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #fff;
+        }
+
+        .option-card:hover {
+            border-color: #ff58a8;
+        }
+
+        .owner-number {
+            font-weight: 700;
+            color: #28a745;
+            font-size: 1.4em;
+            display: block;
+            margin-top: 10px;
+            border: 2px dashed #28a745;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+        </header>
+
+        <div class="checkout-container">
+            <h1>Confirm Order & Pay Deposit</h1>
+            <p style="color:#666; margin-top: 10px;">Please pay the security deposit to confirm your rental.</p>
+
+            <div id="depositAmountDisplay" style="font-size: 1.8em; font-weight: 800; margin: 30px 0; color: #ff58a8;">
+                Loading...</div>
+
+            <button id="payDepositBtn" class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 1.1em;">Pay
+                Deposit Now</button>
+
+            <div id="paymentOptions" class="payment-options">
+                <h3 style="margin-bottom: 15px;">Choose Payment Method</h3>
+
+                <div class="option-card" onclick="finalizePayment('COD')">
+                    <strong>Cash on Delivery (COD)</strong>
+                    <p style="font-size: 0.9em; color:#666;">Pay the deposit amount in cash when product is delivered.
+                    </p>
+                </div>
+
+                <div class="option-card" onclick="showOnlinePayment()">
+                    <strong>Pay Online to Owner (UPI/PhonePe)</strong>
+                    <p style="font-size: 0.9em; color:#666;">Transfer the deposit directly to the owner.</p>
+                    <div id="onlinePaymentDetails"
+                        style="display:none; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+                        <p>Transfer to Owner via GPay/PhonePe/Paytm:</p>
+                        <span class="owner-number">8459643821</span>
+                        <button class="btn btn-primary" style="margin-top:15px; width:100%;"
+                            onclick="finalizePayment('Online')">Confirm: I have Paid Online</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://yiyubrrqxzuocvmjrapi.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_8FHJie5q1_2Jb76GO8hOFw_NepiMRA8';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderIds = urlParams.get('orderIds')?.split(',') || [];
+
+        document.getElementById('payDepositBtn').addEventListener('click', () => {
+            document.getElementById('paymentOptions').style.display = 'block';
+            document.getElementById('payDepositBtn').style.display = 'none';
+        });
+
+        function showOnlinePayment() {
+            document.getElementById('onlinePaymentDetails').style.display = 'block';
+        }
+
+        async function finalizePayment(method) {
+            if (!orderIds.length) return;
+
+            const status = method === 'Online' ? 'Online Payment - Pending Approval' : 'Confirmed';
+            const paymentStatus = method === 'Online' ? 'Paid Online (Pending)' : 'Cash on Delivery';
+
+            const { error } = await supabaseClient
+                .from('orders')
+                .update({
+                    order_status: status,
+                    payment_status: paymentStatus
+                })
+                .in('id', orderIds);
+
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                alert('Payment preference saved! Your order is being processed.');
+                window.location.href = 'orders.html';
+            }
+        }
+
+        (async () => {
+            const { data, error } = await supabaseClient
+                .from('orders')
+                .select('deposit_amount')
+                .in('id', orderIds);
+
+            if (error) {
+                document.getElementById('depositAmountDisplay').innerText = "Error loading amount";
+            } else if (data) {
+                const totalDeposit = data.reduce((sum, o) => sum + (o.deposit_amount || 0), 0);
+                document.getElementById('depositAmountDisplay').innerText = `Total Deposit: ₹${totalDeposit}`;
+            }
+        })();
+    </script>
+</body>
+
+</html>

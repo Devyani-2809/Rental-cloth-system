@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RentStyle — Premium Cloth Rental</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="index.html">RentStyle</a>
+            <nav class="nav-links">
+                <a href="collections.html">Collections</a>
+                <div class="quick-search-wrap">
+                    <input type="text" id="quickSearchInput" class="quick-search-input"
+                        placeholder="&#128269; Quick search..." oninput="quickSearch(this.value)"
+                        onfocus="showQuickResults()" onblur="setTimeout(hideQuickResults,200)" autocomplete="off" />
+                    <div id="quickSearchResults" class="quick-search-results hidden"></div>
+                </div>
+                <a href="features.html">Features</a>
+                <a href="orders.html">My Orders</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="contact.html">Contact</a>
+                <div style="display:inline-flex; gap:8px; margin-left:15px;">
+                    <button onclick="document.body.className=''"
+                        style="width:20px; height:20px; border-radius:50%; background:#6366f1; border:none; cursor:pointer;"
+                        title="Midnight Luxe"></button>
+                    <button onclick="document.body.className='theme-royal'"
+                        style="width:20px; height:20px; border-radius:50%; background:#c5a059; border:none; cursor:pointer;"
+                        title="Royal Gold"></button>
+                    <button onclick="setTheme('theme-blush')"
+                        style="width:20px; height:20px; border-radius:50%; background:#ff9a9e; border:none; cursor:pointer;"
+                        title="Soft Blush"></button>
+                </div>
+            </nav>
+            <div class="actions">
+                <div class="theme-switcher" title="Switch Theme">
+                    <button class="theme-btn t1" onclick="setTheme('')" title="Midnight Luxe"></button>
+                    <button class="theme-btn t2" onclick="setTheme('theme-royal')" title="Royal Gold"></button>
+                    <button class="theme-btn t3" onclick="setTheme('theme-blush')" title="Soft Blush"></button>
+                </div>
+                <button id="openLogin" class="btn btn-secondary">Login</button>
+                <button id="openRegister" class="btn btn-primary">Register</button>
+            </div>
+        </header>
+
+        <section id="hero" class="hero-section">
+            <div class="hero-copy">
+                <span class="eyebrow">Premium Cloth Rental</span>
+                <h1>Rent stunning outfits for every occasion</h1>
+                <p>Discover designer dresses, formal wear and casual styles with fast delivery, easy returns and smart
+                    order tracking.</p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary" id="browseNow">Browse Collection</button>
+                    <button class="btn btn-secondary" id="viewDemo">Explore Features</button>
+                </div>
+            </div>
+            <div class="hero-visual"></div>
+        </section>
+
+        <section id="features" class="features-grid">
+            <article>
+                <h2>User Experience</h2>
+                <ul>
+                    <li>Secure Supabase login & registration</li>
+                    <li>Browse by category, gender, occasion, price and size</li>
+                    <li>Add items to cart, wishlist and rental orders</li>
+                    <li>Ratings, reviews and return requests</li>
+                </ul>
+            </article>
+            <article>
+                <h2>Advanced Tools</h2>
+                <ul>
+                    <li>Smart search and filter controls</li>
+                    <li>Order tracking and rental duration selector</li>
+                    <li>Responsive mobile-first design</li>
+                    <li>Animated UI and rich background imagery</li>
+                </ul>
+            </article>
+            <article>
+                <h2>Admin Power</h2>
+                <ul>
+                    <li>Admin dashboard for inventory management</li>
+                    <li>Add, edit and remove cloth items</li>
+                    <li>Approve or cancel rental orders</li>
+                    <li>Revenue tracking and analytics</li>
+                </ul>
+            </article>
+        </section>
+
+        <section id="collections" class="collections-section">
+            <div class="section-header">
+                <h2>Explore the hottest cloth collection</h2>
+                <p>Filter by category, gender, occasion, price, and sizes to find your perfect rental look.</p>
+            </div>
+
+            <div class="filters-panel"
+                style="display:flex;flex-wrap:nowrap;gap:10px;align-items:flex-end;overflow-x:auto;padding:14px 18px;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.07);margin-bottom:24px;">
+                <div class="filter-group"
+                    style="min-width:200px;flex:2;border-right:2px solid var(--border);padding-right:12px;">
+                    <label style="color:var(--accent);font-weight:700;">&#128197; Rental Dates</label>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <input type="date" id="filterStartDate"
+                            style="flex:1;padding:10px 8px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:0.85em;"
+                            onchange="filterClothes()" />
+                        <span style="color:var(--muted);font-size:0.8em;">to</span>
+                        <input type="date" id="filterEndDate"
+                            style="flex:1;padding:10px 8px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:0.85em;"
+                            onchange="filterClothes()" />
+                    </div>
+                </div>
+                <div class="filter-group" style="min-width:100px;flex:1;">
+                    <label>Category</label>
+                    <select id="categoryFilter">
+                        <option value="all">All</option>
+                        <option value="dresses">Dresses</option>
+                        <option value="suits">Suits</option>
+                        <option value="casual">Casual</option>
+                        <option value="traditional">Traditional</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="min-width:90px;flex:1;">
+                    <label>Gender</label>
+                    <select id="genderFilter">
+                        <option value="all">All</option>
+                        <option value="Female">Women</option>
+                        <option value="Male">Men</option>
+                        <option value="unisex">Unisex</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="min-width:90px;flex:1;">
+                    <label>Age</label>
+                    <select id="ageFilter">
+                        <option value="all">All</option>
+                        <option value="Kids">Kids</option>
+                        <option value="Adults">Adults</option>
+                        <option value="Teens">Teens</option>
+                        <option value="All Ages">All Ages</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="min-width:100px;flex:1;">
+                    <label>Occasion</label>
+                    <select id="occasionFilter">
+                        <option value="all">All</option>
+                        <option value="wedding">Wedding</option>
+                        <option value="party">Party</option>
+                        <option value="formal">Formal</option>
+                        <option value="casual">Casual</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="min-width:110px;flex:1;">
+                    <label>Festival</label>
+                    <select id="festivalFilter">
+                        <option value="all">All</option>
+                        <option value="diwali">Diwali</option>
+                        <option value="holi">Holi</option>
+                        <option value="eid">Eid</option>
+                        <option value="navratri">Navratri</option>
+                        <option value="raksha-bandhan">Raksha Bandhan</option>
+                        <option value="christmas">Christmas</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="min-width:90px;flex:1;">
+                    <label>Color</label>
+                    <select id="colorFilter">
+                        <option value="all">All</option>
+                        <option value="black">Black</option>
+                        <option value="white">White</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="gold">Gold</option>
+                        <option value="green">Green</option>
+                        <option value="pink">Pink</option>
+                        <option value="navy">Navy</option>
+                        <option value="maroon">Maroon</option>
+                        <option value="grey">Grey</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="silver">Silver</option>
+                        <option value="purple">Purple</option>
+                        <option value="orange">Orange</option>
+                        <option value="brown">Brown</option>
+                        <option value="beige">Beige</option>
+                        <option value="peach">Peach</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="min-width:80px;flex:1;">
+                    <label>Size</label>
+                    <select id="sizeFilter">
+                        <option value="all">All</option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="min-width:110px;flex:1;">
+                    <label>Price</label>
+                    <select id="priceFilter">
+                        <option value="all">All</option>
+                        <option value="0-500">₹0 - ₹500</option>
+                        <option value="500-1500">₹500 - ₹1500</option>
+                        <option value="1500+">₹1500+</option>
+                    </select>
+                </div>
+            </div>
+            <input type="text" id="clothesSearchInput" style="display:none;" />
+
+            <div id="cardsGrid" class="cards-grid"></div>
+        </section>
+
+        <section id="dashboard" class="dashboard-section">
+            <div class="dashboard-panel user-panel">
+                <h3>User Dashboard</h3>
+                <ul>
+                    <li>Profile management with avatar and rental history</li>
+                    <li>Track active orders and return status</li>
+                    <li>Wishlist and cart summaries</li>
+                    <li>Review and rating timeline</li>
+                </ul>
+            </div>
+            <div class="dashboard-panel admin-panel">
+                <h3>Admin Dashboard</h3>
+                <ul>
+                    <li>Manage clothes inventory</li>
+                    <li>Approve or cancel orders</li>
+                    <li>Return requests and revenue reports</li>
+                    <li>Analytics cards and insights</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div>
+                <h2>Start renting your next outfit</h2>
+                <p>Enjoy a beautiful, engaging and responsive rental experience across all devices.</p>
+            </div>
+            <button class="btn btn-primary" id="openContact">Contact Support</button>
+        </section>
+
+        <footer class="site-footer">
+            <p>&copy; © 2026 RentStyle | Developed by Devyani Pawar, Latika Patil, Mansi Kate, Hemlata Patil, and
+                Charuta Bhadane.</p>
+        </footer>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+    <div id="modal" class="modal hidden">
+        <button id="closeModal" class="close-btn">×</button>
+        <div id="modalContent"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script>
+        function setTheme(cls) {
+            document.body.className = cls;
+            localStorage.setItem('rs-theme', cls);
+        }
+        const saved = localStorage.getItem('rs-theme');
+        if (saved) document.body.className = saved;
+    </script>
+</body>
+
+</html>
